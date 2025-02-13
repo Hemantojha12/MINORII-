@@ -1,0 +1,57 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Backend/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "Frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist",
+        "buildCommand": "npm run build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/v1/(.*)",
+      "dest": "Backend/index.js"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "Backend/index.js"
+    },
+    {
+      "src": "^/assets/(.*\\.(?:js|css|jpg|jpeg|png|gif|ico|json|webp|avif))$",
+      "dest": "Frontend/dist/assets/$1"
+    },
+    {
+      "src": "^/static/(.*)",
+      "dest": "Frontend/dist/static/$1"
+    },
+    {
+      "src": "^/(admindb|orgdb|userdb)(.*)",
+      "headers": { "Cache-Control": "no-cache" },
+      "dest": "Frontend/dist/index.html"
+    },
+    {
+      "src": "^/(about|contact|event|loginsignup|profile|settings)(.*)",
+      "headers": { "Cache-Control": "no-cache" },
+      "dest": "Frontend/dist/index.html"
+    },
+    {
+      "src": "/(.*\\.[a-z0-9]+)$",
+      "dest": "Frontend/dist/$1"
+    },
+    {
+      "src": "/(.*)",
+      "headers": { "Cache-Control": "no-cache" },
+      "dest": "Frontend/dist/index.html"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
